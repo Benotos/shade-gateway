@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { QRCodeSVG } from 'qrcode.react';
 import s from '@/components/billing.module.css';
+import { emitBalance } from '@/components/shadeKey';
 
 type Pkg = { id: string; label: string; usdCents: number; bonusPct: number; highlight: boolean; credits: number };
 type Deposit = {
@@ -89,7 +90,7 @@ export default function PurchaseClient({ packages, initialPackage, ready }: { pa
       try {
         const d = await api<Deposit>(`/api/deposits/${deposit.id}`, key);
         setDeposit(d);
-        if (d.status !== 'pending') { store.del(DEP_STORE); if (d.balance_credits !== undefined) setBalance(d.balance_credits); }
+        if (d.status !== 'pending') { store.del(DEP_STORE); if (d.balance_credits !== undefined) { setBalance(d.balance_credits); emitBalance(d.balance_credits); } }
       } catch { /* keep polling */ }
     };
     pollRef.current = setInterval(tick, 6000);
@@ -269,7 +270,7 @@ export default function PurchaseClient({ packages, initialPackage, ready }: { pa
           <div className={s.card} style={{ marginTop: 16 }}>
             <div className={`${s.notice} ${s.okBox}`} style={{ marginTop: 0 }}>Payment received. {fmt(deposit.credits)} credits added to your key.</div>
             <div className={s.row}>
-              <Link className={`${s.btn} ${s.primary}`} href="/">Start using SHADE</Link>
+              <Link className={`${s.btn} ${s.primary}`} href="/chat">Start chatting</Link>
               <button className={`${s.btn} ${s.ghost}`} onClick={() => setDeposit(null)}>Buy more</button>
             </div>
             {deposit.signature && <p className={s.fine} style={{ marginTop: 12 }}>Transaction: <a className={s.mono} style={{ color: 'inherit' }} href={`https://solscan.io/tx/${deposit.signature}`} target="_blank" rel="noreferrer">{deposit.signature.slice(0, 20)}…</a></p>}
@@ -277,7 +278,7 @@ export default function PurchaseClient({ packages, initialPackage, ready }: { pa
         )}
         {key && deposit && deposit.status === 'expired' && (
           <div className={s.card} style={{ marginTop: 16 }}>
-            <div className={`${s.notice} ${s.err}`} style={{ marginTop: 0 }}>This purchase expired before a matching transfer arrived. If you already sent SOL, keep your transaction signature and contact support.</div>
+            <div className={`${s.notice} ${s.err}`} style={{ marginTop: 0 }}>This purchase expired before a matching transfer arrived. If you already sent SOL, keep your transaction signature and use the Support link at the bottom of the page.</div>
             <button className={`${s.btn} ${s.primary} ${s.full}`} onClick={() => setDeposit(null)}>Start a new purchase</button>
           </div>
         )}

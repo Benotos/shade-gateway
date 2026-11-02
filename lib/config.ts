@@ -51,7 +51,10 @@ export function getModels(): ShadeModel[] {
       outputPerM: free ? 0 : known?.outputPerM ?? 8,
     };
   }).filter((m): m is ShadeModel => Boolean(m));
-  return parsed.length ? parsed : defaults;
+  if (!parsed.length) return defaults;
+  // Always keep a free taster model unless the free tier is switched off.
+  if (!parsed.some((m) => m.free) && process.env.SHADE_FREE_DAILY_LIMIT !== '0') parsed.unshift(defaults[0]);
+  return parsed;
 }
 
 export function findModel(id: string | undefined): ShadeModel | undefined {

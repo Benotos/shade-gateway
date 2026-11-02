@@ -125,7 +125,7 @@ export default async function PricingPage() {
             <details><summary>What is my key?</summary><p>When you buy, the site creates a secret key (shade_sk_…). It holds your credits and works as your API key. Save it somewhere safe: we can&apos;t recover it, and anyone with it can spend your credits.</p></details>
             <details><summary>Can I use it from code or an AI agent?</summary><p>Yes. The API is OpenAI-compatible: point any OpenAI SDK at this site&apos;s /v1 URL and use your SHADE key. Every call is charged from the same balance.</p></details>
             <details><summary>Do credits expire?</summary><p>No. Unused credits stay on your key.</p></details>
-            <details><summary>What if I send the wrong amount?</summary><p>Scanning the QR sends the right amount automatically. If you send by hand, send the exact amount shown; if it doesn&apos;t match, contact support with your transaction signature.</p></details>
+            <details><summary>What if I send the wrong amount?</summary><p>Scanning the QR sends the right amount automatically. If you send by hand, send the exact amount shown; if it doesn&apos;t match, message us through the Support link at the bottom of the page with your transaction signature.</p></details>
           </div>
         </section>
       </div>

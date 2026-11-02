@@ -1,0 +1,27 @@
+.hero { text-align: center; padding: 40px 0 8px; }
+.heroTitle { font-size: clamp(38px, 7.5vw, 76px); line-height: 1.02; letter-spacing: -0.035em; margin: 22px 0 18px; font-weight: 700; }
+.heroTitle em { font-style: normal; color: var(--accent); }
+.heroLead { color: var(--muted); font-size: 18px; line-height: 1.6; max-width: 600px; margin: 0 auto; }
+.heroCtas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
+
+.stats { margin-top: 56px; display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--border); border-radius: 18px; background: var(--surface); overflow: hidden; }
+.stat { padding: 20px 22px; border-left: 1px solid var(--border); }
+.stat:first-child { border-left: 0; }
+.statNum { font-size: 28px; font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.statLabel { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
+@media (max-width: 760px) {
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .stat:nth-child(3) { border-left: 0; }
+  .stat:nth-child(n + 3) { border-top: 1px solid var(--border); }
+}
+
+.stepNum { font-size: 13px; color: var(--accent); font-variant-numeric: tabular-nums; letter-spacing: 0.1em; }
+.cardTitle { font-size: 18px; margin: 8px 0 6px; font-weight: 600; }
+
+.models { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.modelTop { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.modelPrice { font-size: 13px; color: var(--accent); font-variant-numeric: tabular-nums; }
+
+.devGrid { display: grid; gap: 24px; grid-template-columns: 1fr 1.2fr; align-items: center; }
+@media (max-width: 760px) { .devGrid { grid-template-columns: 1fr; } }
+.code { margin: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 18px 20px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; line-height: 1.65; color: var(--text); overflow-x: auto; }
