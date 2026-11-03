@@ -19,17 +19,21 @@ html, body { margin: 0; padding: 0; }
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
 }
 a { color: inherit; }
 button, input, textarea, select { font: inherit; }
+h1, h2, h3, .display { font-family: 'Bricolage Grotesque Variable', 'Geist Variable', ui-sans-serif, system-ui, sans-serif; font-optical-sizing: auto; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
 ::selection { background: var(--accent); color: var(--deep); }
 
 /* Nav */
 .nav { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(12px); background: rgba(7, 17, 13, 0.78); border-bottom: 1px solid var(--border); }
 .navInner { max-width: 1080px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; gap: 20px; }
-.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; letter-spacing: 0.16em; font-size: 15px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: 'Bricolage Grotesque Variable', sans-serif; font-weight: 700; letter-spacing: 0.04em; font-size: 19px; }
 .brand img { width: 30px; height: 30px; }
 .navLinks { display: flex; gap: 4px; margin-left: 8px; }
 .navLinks a { text-decoration: none; color: var(--muted); font-size: 14px; padding: 7px 10px; border-radius: 8px; }
@@ -38,7 +42,9 @@ button, input, textarea, select { font: inherit; }
 .navBal { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .navBal strong { color: var(--accent); font-weight: 600; }
 .cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; border: 1px solid transparent; border-radius: 10px; padding: 9px 14px; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; }
-.ctaPrimary { background: var(--accent); color: var(--deep); }
+.ctaPrimary { background: var(--accent); color: var(--deep); box-shadow: 0 0 0 0 rgba(184, 228, 201, 0); transition: background 0.15s ease, box-shadow 0.25s ease, transform 0.08s ease; }
+.ctaPrimary:hover { box-shadow: 0 8px 30px -8px rgba(184, 228, 201, 0.55); }
+.cta:active { transform: translateY(1px); }
 .ctaPrimary:hover { background: var(--accent-strong); }
 .ctaGhost { background: transparent; color: var(--text); border-color: var(--border-strong); }
 .ctaGhost:hover { border-color: var(--accent); }
@@ -56,3 +62,22 @@ button, input, textarea, select { font: inherit; }
 .footerInner { max-width: 1080px; margin: 0 auto; padding: 28px 16px; display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; color: var(--muted); font-size: 13px; }
 .footer a { color: var(--muted); text-decoration: none; margin-left: 16px; }
 .footer a:hover { color: var(--text); }
+
+/* 3D tilt (pointer-driven) */
+.tilt { perspective: 900px; height: 100%; }
+.tiltInner { position: relative; height: 100%; transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transform-style: preserve-3d; transition: transform 0.35s cubic-bezier(.2,.8,.2,1); border-radius: 18px; }
+.tilt[data-active='true'] .tiltInner { transition: transform 0.08s linear; }
+.tiltInner::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity 0.3s ease;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(193, 239, 206, 0.12), transparent 45%); }
+.tilt[data-active='true'] .tiltInner::after { opacity: 1; }
+.tiltInner > * { height: 100%; }
+
+/* Scroll reveal */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(.2,.8,.2,1); }
+.reveal[data-shown='true'] { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .tiltInner { transform: none !important; transition: none; }
+  * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+}

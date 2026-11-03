@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from 'next';
+import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource-variable/geist';
 import './globals.css';
 import Nav from '@/components/Nav';
 
@@ -20,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <footer className="footer">
           <div className="footerInner">
-            <span>© {new Date().getFullYear()} SHADE · Beta</span>
+            <span>© {new Date().getFullYear()} SHADE. Private AI, paid in SOL.</span>
             <span>
               <a href="/pricing">Pricing</a>
               <a href="/docs">API docs</a>

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import s from '@/components/billing.module.css';
+import Tilt from '@/components/Tilt';
 import { creditsPerM, pricedModels } from '@/lib/catalog';
 import { freeDailyLimit, getPackages, packageCreditUnits, unitsToCredits } from '@/lib/config';
 
@@ -36,7 +37,7 @@ export default async function PricingPage() {
           <p className={s.sub}>Paid in SOL at the live rate when you check out. No wallet connect: you get a deposit address and QR.</p>
           <div className={s.grid3}>
             {packages.map((p) => (
-              <div key={p.id} className={`${s.card} ${p.highlight ? s.cardHi : ''}`}>
+              <Tilt key={p.id}><div className={`${s.card} ${p.highlight ? s.cardHi : ''}`}>
                 {p.highlight && <span className={s.badge}>Most picked</span>}
                 <div className={s.pkgName}>{p.label}</div>
                 <div className={s.price}>{usd(p.usdCents)}</div>
@@ -46,7 +47,7 @@ export default async function PricingPage() {
                 <Link href={`/purchase?pkg=${encodeURIComponent(p.id)}`} className={`${s.btn} ${p.highlight ? s.primary : s.ghost} ${s.full}`}>
                   Buy with SOL
                 </Link>
-              </div>
+              </div></Tilt>
             ))}
           </div>
         </section>

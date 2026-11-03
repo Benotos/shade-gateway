@@ -2,6 +2,9 @@ import Link from 'next/link';
 import s from '@/components/billing.module.css';
 import h from '@/components/home.module.css';
 import LiveStats from '@/components/LiveStats';
+import HeroScene from '@/components/HeroScene';
+import Tilt from '@/components/Tilt';
+import Reveal from '@/components/Reveal';
 import { creditsPerM, pricedModels } from '@/lib/catalog';
 import { freeDailyLimit, getPackages, packageCreditUnits, unitsToCredits } from '@/lib/config';
 
@@ -20,30 +23,34 @@ export default async function Home() {
       <div className={s.wrap}>
         {/* Hero */}
         <section className={h.hero}>
-          <span className={s.eyebrow}><span className={s.dot} /> Private AI gateway · Now in beta</span>
-          <h1 className={h.heroTitle}>The world&apos;s best AI models.<br /><em>No account. Paid in SOL.</em></h1>
-          <p className={h.heroLead}>
-            SHADE gives you one chat app and one OpenAI-compatible API for leading AI models, billed per request
-            from a prepaid SOL balance. No email, no phone number, no card on file and no wallet connection.
-            Your access key is your account, and your conversations never touch our database.
-          </p>
-          <div className={h.heroCtas}>
-            <Link href="/chat" className="cta ctaPrimary ctaLg">Start chatting free</Link>
-            <Link href="/purchase" className="cta ctaGhost ctaLg">Buy credits with SOL</Link>
+          <div className={h.heroText}>
+            <span className={`${s.eyebrow} ${h.in1}`}><span className={s.dot} /> Private AI gateway, now in beta</span>
+            <h1 className={`${h.heroTitle} ${h.in2}`}>Ask anything.<br />Leave no trace.</h1>
+            <p className={`${h.heroLead} ${h.in3}`}>
+              One chat app and one OpenAI-compatible API for leading AI models, paid per request from a prepaid SOL balance.
+              No email, no card and no wallet connection. Your key is your account, and your conversations never touch our database.
+            </p>
+            <div className={`${h.heroCtas} ${h.in4}`}>
+              <Link href="/chat" className="cta ctaPrimary ctaLg">Start chatting free</Link>
+              <Link href="/purchase" className="cta ctaGhost ctaLg">Buy credits with SOL</Link>
+            </div>
+            <ul className={`${h.heroPoints} ${h.in5}`}>
+              <li>{freeDailyLimit()} free messages a day</li>
+              <li>Credits from {starter ? `$${fmt(starter.usdCents / 100)}` : '$5'} that never expire</li>
+              <li>Drop-in OpenAI replacement</li>
+            </ul>
           </div>
-          <ul className={h.heroPoints}>
-            <li>{freeDailyLimit()} free messages every day</li>
-            <li>Credits from {starter ? `$${fmt(starter.usdCents / 100)}` : '$5'}, never expire</li>
-            <li>Drop-in replacement for the OpenAI API</li>
-          </ul>
+          <div className={h.heroVisual}>
+            <HeroScene className={h.scene} />
+            <div className={h.sceneCaption}>Every request goes in. Nothing is kept.</div>
+          </div>
         </section>
 
         <LiveStats />
 
         {/* Value props */}
-        <section className={s.section}>
+        <Reveal><section className={s.section}>
           <div className={h.sectionHead}>
-            <span className={h.kicker}>Why SHADE</span>
             <h2 className={h.h2}>AI access without handing over your identity</h2>
             <p className={h.sectionLead}>
               Mainstream AI products tie every prompt to a verified account, a card and a phone number.
@@ -65,12 +72,11 @@ export default async function Home() {
               </div>
             ))}
           </div>
-        </section>
+        </section></Reveal>
 
         {/* How it works */}
-        <section className={s.section}>
+        <Reveal><section className={s.section}>
           <div className={h.sectionHead}>
-            <span className={h.kicker}>How it works</span>
             <h2 className={h.h2}>From wallet to first answer in under a minute</h2>
           </div>
           <div className={h.steps}>
@@ -89,12 +95,11 @@ export default async function Home() {
               </div>
             ))}
           </div>
-        </section>
+        </section></Reveal>
 
         {/* Who it's for */}
-        <section className={s.section}>
+        <Reveal><section className={s.section}>
           <div className={h.sectionHead}>
-            <span className={h.kicker}>Who it&apos;s for</span>
             <h2 className={h.h2}>One gateway, three kinds of users</h2>
           </div>
           <div className={s.grid3}>
@@ -109,18 +114,17 @@ export default async function Home() {
               </div>
             ))}
           </div>
-        </section>
+        </section></Reveal>
 
         {/* Models */}
-        <section className={s.section}>
+        <Reveal><section className={s.section}>
           <div className={h.sectionHead}>
-            <span className={h.kicker}>Models</span>
             <h2 className={h.h2}>The right model for every task</h2>
             <p className={h.sectionLead}>Switch models per message in the chat, or per request in the API. Rates are shown in credits per million tokens; 1,000 credits equal $1.</p>
           </div>
           <div className={h.models}>
             {models.map((m) => (
-              <div key={m.id} className={s.card}>
+              <Tilt key={m.id}><div className={s.card}>
                 <div className={h.modelTop}><strong>{m.name}</strong><span className={s.tag}>{m.tag}</span></div>
                 <p className={h.cardText} style={{ margin: '8px 0 14px' }}>{m.description}</p>
                 <div className={h.modelPrice}>
@@ -129,19 +133,18 @@ export default async function Home() {
                     : `${fmt(creditsPerM(m.inputPerM))} in / ${fmt(creditsPerM(m.outputPerM))} out per 1M tokens`}
                 </div>
                 <div className={h.modelId}>model: &quot;{m.id}&quot;</div>
-              </div>
+              </div></Tilt>
             ))}
           </div>
           <p className={s.fine} style={{ marginTop: 14 }}>
             {paid.length} paid models live today, with more being added. See full rates and typical costs on the <Link href="/pricing" style={{ color: 'var(--accent)' }}>pricing page</Link>.
           </p>
-        </section>
+        </section></Reveal>
 
         {/* Developers */}
-        <section className={s.section}>
+        <Reveal><section className={s.section}>
           <div className={h.devGrid}>
             <div>
-              <span className={h.kicker}>For developers</span>
               <h2 className={h.h2}>OpenAI-compatible. Two lines to switch.</h2>
               <p className={h.sectionLead}>
                 Keep your existing code, SDKs and tooling. Change the base URL and API key, and every request is billed
@@ -169,12 +172,11 @@ r = client.chat.completions.create(
 
 print(r.choices[0].message.content)`}</pre>
           </div>
-        </section>
+        </section></Reveal>
 
         {/* Privacy model */}
-        <section className={s.section}>
+        <Reveal><section className={s.section}>
           <div className={h.sectionHead}>
-            <span className={h.kicker}>Privacy model</span>
             <h2 className={h.h2}>Exactly what we keep, and what we don&apos;t</h2>
             <p className={h.sectionLead}>We publish our data handling in plain language, so you can decide what to send.</p>
           </div>
@@ -207,12 +209,11 @@ print(r.choices[0].message.content)`}</pre>
               </ul>
             </div>
           </div>
-        </section>
+        </section></Reveal>
 
         {/* FAQ */}
-        <section className={s.section}>
+        <Reveal><section className={s.section}>
           <div className={h.sectionHead}>
-            <span className={h.kicker}>FAQ</span>
             <h2 className={h.h2}>Common questions</h2>
           </div>
           <div className={s.faq}>
@@ -223,10 +224,10 @@ print(r.choices[0].message.content)`}</pre>
             <details><summary>Can I use SHADE inside my own app or bot?</summary><p>Yes. The API is compatible with the OpenAI chat completions format, so any SDK, framework or agent tool that supports OpenAI works by changing the base URL and key.</p></details>
             <details><summary>Is SHADE fully anonymous?</summary><p>SHADE does not know who you are, and it never stores your conversations. Your prompt is still processed by the model provider to produce an answer, and Solana payments are public on-chain. A fully self-hosted private tier is planned.</p></details>
           </div>
-        </section>
+        </section></Reveal>
 
         {/* Final CTA */}
-        <section className={h.finalCta}>
+        <Reveal><section className={h.finalCta}>
           <h2 className={h.h2}>Try SHADE in the next 30 seconds</h2>
           <p className={h.sectionLead} style={{ margin: '0 auto' }}>No sign-up and no SOL needed for your first {freeDailyLimit()} messages. Top up when you&apos;re ready for the full model lineup.</p>
           <div className={h.heroCtas}>
@@ -234,7 +235,7 @@ print(r.choices[0].message.content)`}</pre>
             <Link href="/pricing" className="cta ctaGhost ctaLg">View pricing</Link>
           </div>
           {starter && <p className={s.fine} style={{ marginTop: 14 }}>Credit packs from ${fmt(starter.usdCents / 100)} ({fmt(unitsToCredits(packageCreditUnits(starter)))} credits).</p>}
-        </section>
+        </section></Reveal>
       </div>
     </main>
   );

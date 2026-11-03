@@ -23,24 +23,24 @@
 .wrap { max-width: 1080px; margin: 0 auto; }
 .narrow { max-width: 760px; margin: 0 auto; }
 
-.eyebrow { display: inline-flex; gap: 8px; align-items: center; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--border); border-radius: 999px; padding: 6px 12px; background: rgba(21, 62, 47, 0.35); }
+.eyebrow { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; letter-spacing: 0.01em; color: var(--accent); border: 1px solid var(--border); border-radius: 999px; padding: 6px 12px; background: rgba(21, 62, 47, 0.35); }
 .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 10px var(--ok); }
-.title { font-size: clamp(32px, 6vw, 56px); line-height: 1.05; letter-spacing: -0.03em; margin: 18px 0 14px; font-weight: 650; }
-.title em { font-style: normal; color: var(--accent); }
+.title { font-family: 'Bricolage Grotesque Variable', sans-serif; font-size: clamp(36px, 6.5vw, 64px); line-height: 1.02; letter-spacing: -0.035em; margin: 18px 0 14px; font-weight: 700; }
+.title em { font-style: normal; color: inherit; }
 .lead { color: var(--muted); font-size: 17px; line-height: 1.6; max-width: 620px; margin: 0; }
 .center { text-align: center; }
 .center .lead { margin: 0 auto; }
 
-.section { margin-top: 64px; }
+.section { margin-top: clamp(72px, 10vw, 120px); }
 .h2 { font-size: 22px; letter-spacing: -0.01em; margin: 0 0 6px; font-weight: 600; }
 .sub { color: var(--muted); margin: 0 0 22px; font-size: 15px; }
 
 .grid3 { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 22px; position: relative; }
+.card { background: linear-gradient(180deg, rgba(18, 39, 32, 0.9), rgba(13, 28, 22, 0.9)); border: 1px solid var(--border); border-radius: 18px; padding: 22px; position: relative; box-shadow: inset 0 1px 0 rgba(193, 239, 206, 0.06); }
 .cardHi { border-color: var(--border-strong); background: linear-gradient(180deg, rgba(21, 62, 47, 0.55), var(--surface)); }
-.badge { position: absolute; top: 16px; right: 16px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--deep); background: var(--accent); border-radius: 999px; padding: 4px 9px; font-weight: 650; }
-.pkgName { font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
-.price { font-size: 40px; font-weight: 650; letter-spacing: -0.02em; margin: 10px 0 2px; }
+.badge { position: absolute; top: 16px; right: 16px; font-size: 12px; color: var(--deep); background: var(--accent); border-radius: 999px; padding: 4px 9px; font-weight: 650; }
+.pkgName { font-size: 15px; color: var(--muted); font-weight: 500; }
+.price { font-family: 'Bricolage Grotesque Variable', sans-serif; font-size: 44px; font-weight: 650; letter-spacing: -0.02em; margin: 10px 0 2px; }
 .credits { color: var(--accent); font-size: 15px; }
 .fine { color: var(--muted); font-size: 13px; line-height: 1.55; }
 
@@ -65,7 +65,7 @@
 
 .split { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
 .list { margin: 12px 0 0; padding-left: 18px; color: var(--muted); line-height: 1.7; font-size: 14px; }
-.soon { color: var(--warn); font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; }
+.soon { color: var(--warn); font-size: 13px; }
 
 .faq { display: grid; gap: 10px; }
 .faq details { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; }
@@ -83,7 +83,7 @@
 .codeBox { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 11px 12px; min-width: 0; }
 .input { font: inherit; flex: 1; background: var(--bg); border: 1px solid var(--border-strong); border-radius: 10px; padding: 11px 12px; color: var(--text); font-size: 14px; min-width: 0; }
 .input:focus { outline: none; border-color: var(--accent); }
-.label { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-top: 18px; }
+.label { display: block; font-size: 13px; color: var(--muted); margin-top: 18px; }
 
 .notice { border-radius: 12px; padding: 12px 14px; font-size: 14px; line-height: 1.5; margin-top: 14px; }
 .warn { background: rgba(242, 200, 121, 0.08); border: 1px solid rgba(242, 200, 121, 0.3); color: var(--warn); }
