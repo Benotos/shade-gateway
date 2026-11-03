@@ -14,7 +14,6 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { themeColor: '#07110d' };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const support = process.env.NEXT_PUBLIC_SUPPORT_URL;
   return (
     <html lang="en">
       <body>
@@ -26,7 +25,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <span>
               <a href="/pricing">Pricing</a>
               <a href="/docs">API docs</a>
-              {support && <a href={support} target="_blank" rel="noreferrer">Support</a>}
             </span>
           </div>
         </footer>
