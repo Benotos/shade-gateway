@@ -125,7 +125,7 @@ export default async function Home() {
           <div className={h.models}>
             {models.map((m) => (
               <Tilt key={m.id}><div className={s.card}>
-                <div className={h.modelTop}><strong>{m.name}</strong><span className={s.tag}>{m.tag}</span></div>
+                <div className={h.modelTop}><strong>{m.name}</strong></div>
                 <p className={h.cardText} style={{ margin: '8px 0 14px' }}>{m.description}</p>
                 <div className={h.modelPrice}>
                   {m.free
