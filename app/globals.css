@@ -39,6 +39,7 @@ h1, h2, h3, .display { font-family: 'Bricolage Grotesque Variable', 'Geist Varia
 .navLinks a { text-decoration: none; color: var(--muted); font-size: 14px; padding: 7px 10px; border-radius: 8px; }
 .navLinks a:hover, .navLinks a[aria-current='page'] { color: var(--text); background: var(--surface); }
 .navRight { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.navSocial { padding: 8px 11px; }
 .navBal { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .navBal strong { color: var(--accent); font-weight: 600; }
 .cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; border: 1px solid transparent; border-radius: 10px; padding: 9px 14px; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; }
