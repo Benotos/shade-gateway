@@ -4,7 +4,7 @@ import {
   unitsToCredits, UNITS_PER_USD, type ShadeModel,
 } from './config';
 import { findAccountByKey, recordFree, rateHit, release, reserve, settle, visitorBucket } from './credits';
-import { pricedModels } from './catalog';
+import { freeModelIds, pricedModels } from './catalog';
 
 // The gateway: validate -> rate limit -> hold credits -> call the model -> charge the real cost -> refund the rest.
 // Prompts and answers pass through memory only; nothing here writes them anywhere.
@@ -96,6 +96,31 @@ async function callProvider(model: ShadeModel, messages: Msg[], maxTokens: numbe
   return json;
 }
 
+// Remembers a working free model per server instance after a fallback.
+let freeOverride: string | null = null;
+
+/** Free tier: try the configured free model, then other free models OpenRouter currently serves. */
+async function callFree(model: ShadeModel, messages: Msg[], maxTokens: number, temperature?: number) {
+  const tried: string[] = [];
+  const first = freeOverride ?? model.providerModel;
+  const candidates = [first];
+  for (let i = 0; i < candidates.length && i < 4; i++) {
+    const id = candidates[i];
+    tried.push(id);
+    try {
+      const r = await callProvider({ ...model, providerModel: id }, messages, maxTokens, temperature);
+      if (id !== model.providerModel) freeOverride = id;
+      return { r, used: id };
+    } catch (e) {
+      const retryable = e instanceof GatewayError && ['provider_404', 'provider_400', 'provider_429', 'provider_502', 'provider_503'].includes(e.code);
+      if (!retryable) throw e;
+      if (candidates.length === 1) candidates.push(...(await freeModelIds(tried)).slice(0, 3));
+      if (i === candidates.length - 1) throw e;
+    }
+  }
+  throw new GatewayError(503, 'No free model is available right now. Try again shortly.', 'free_unavailable');
+}
+
 export type ChatOutput = {
   id: string; object: 'chat.completion'; created: number; model: string;
   choices: ProviderResult['choices'];
@@ -115,9 +140,9 @@ export async function runChat(req: Request, key: string | null, body: ChatInput,
     if (!(await rateHit(`${visitor}:free:day`, 86_400, freeDailyLimit()))) {
       throw new GatewayError(429, `Free tier limit reached (${freeDailyLimit()} per day). Buy credits to keep going.`, 'free_limit_reached');
     }
-    const r = await callProvider(model, messages, Math.min(maxTokens, 1024), temperature);
+    const { r, used } = await callFree(model, messages, Math.min(maxTokens, 1024), temperature);
     const pt = r.usage?.prompt_tokens ?? 0, ct = r.usage?.completion_tokens ?? 0;
-    await recordFree(model.id, model.providerModel, pt, ct);
+    await recordFree(model.id, used, pt, ct);
     return shape(r, model, pt, ct, 0, null, true);
   }
 

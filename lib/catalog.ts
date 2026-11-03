@@ -32,6 +32,18 @@ export async function pricedModels(): Promise<ShadeModel[]> {
   });
 }
 
+/**
+ * Free models OpenRouter currently serves, best first. Free models change often, so the free
+ * tier falls back to one of these when the configured one is gone.
+ */
+export async function freeModelIds(exclude: string[] = []): Promise<string[]> {
+  const prices = await livePrices();
+  const preferred = ['meta-llama/llama-3.3-70b', 'deepseek/deepseek', 'google/gemini', 'google/gemma-3', 'mistralai/mistral-small', 'qwen/qwen3', 'meta-llama/'];
+  const free = [...prices.keys()].filter((id) => id.endsWith(':free') && !exclude.includes(id));
+  const rank = (id: string) => { const i = preferred.findIndex((p) => id.startsWith(p)); return i < 0 ? preferred.length : i; };
+  return free.sort((a, b) => rank(a) - rank(b));
+}
+
 /** What SHADE charges, in credits per 1M tokens (1 credit = $0.001). */
 export function creditsPerM(usdPerM: number) {
   return Math.ceil(usdPerM * markup() * 1000);
