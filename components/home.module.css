@@ -1,8 +1,10 @@
 .hero { text-align: center; padding: 40px 0 8px; }
-.heroTitle { font-size: clamp(38px, 7.5vw, 76px); line-height: 1.02; letter-spacing: -0.035em; margin: 22px 0 18px; font-weight: 700; }
+.heroTitle { font-size: clamp(36px, 7vw, 72px); line-height: 1.03; letter-spacing: -0.035em; margin: 22px 0 20px; font-weight: 700; }
 .heroTitle em { font-style: normal; color: var(--accent); }
-.heroLead { color: var(--muted); font-size: 18px; line-height: 1.6; max-width: 600px; margin: 0 auto; }
+.heroLead { color: var(--muted); font-size: 18px; line-height: 1.65; max-width: 680px; margin: 0 auto; }
 .heroCtas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
+.heroPoints { list-style: none; padding: 0; margin: 22px 0 0; display: flex; gap: 10px 22px; justify-content: center; flex-wrap: wrap; color: var(--muted); font-size: 14px; }
+.heroPoints li::before { content: '✓'; color: var(--ok); margin-right: 7px; }
 
 .stats { margin-top: 56px; display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--border); border-radius: 18px; background: var(--surface); overflow: hidden; }
 .stat { padding: 20px 22px; border-left: 1px solid var(--border); }
@@ -15,13 +17,28 @@
   .stat:nth-child(n + 3) { border-top: 1px solid var(--border); }
 }
 
-.stepNum { font-size: 13px; color: var(--accent); font-variant-numeric: tabular-nums; letter-spacing: 0.1em; }
-.cardTitle { font-size: 18px; margin: 8px 0 6px; font-weight: 600; }
+.sectionHead { max-width: 720px; margin-bottom: 26px; }
+.kicker { display: inline-block; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+.h2 { font-size: clamp(24px, 3.6vw, 34px); letter-spacing: -0.025em; line-height: 1.15; margin: 0 0 12px; font-weight: 650; }
+.sectionLead { color: var(--muted); font-size: 16px; line-height: 1.65; margin: 0; max-width: 680px; }
+
+.featureGrid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.cardTitle { font-size: 17px; margin: 0 0 8px; font-weight: 600; letter-spacing: -0.01em; }
+.cardText { color: var(--muted); font-size: 14.5px; line-height: 1.65; margin: 0; }
+
+.steps { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.step { display: flex; flex-direction: column; gap: 12px; padding: 22px; border-radius: 18px; border: 1px solid var(--border); background: linear-gradient(180deg, rgba(21, 62, 47, 0.35), var(--surface)); }
+.stepNum { font-size: 13px; color: var(--deep); background: var(--accent); width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font-weight: 700; font-variant-numeric: tabular-nums; }
 
 .models { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
 .modelTop { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .modelPrice { font-size: 13px; color: var(--accent); font-variant-numeric: tabular-nums; }
+.modelId { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; color: var(--muted); margin-top: 6px; }
 
-.devGrid { display: grid; gap: 24px; grid-template-columns: 1fr 1.2fr; align-items: center; }
-@media (max-width: 760px) { .devGrid { grid-template-columns: 1fr; } }
-.code { margin: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 18px 20px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; line-height: 1.65; color: var(--text); overflow-x: auto; }
+.devGrid { display: grid; gap: 32px; grid-template-columns: 1fr 1.1fr; align-items: center; }
+@media (max-width: 860px) { .devGrid { grid-template-columns: 1fr; } }
+.code { margin: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px 22px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; line-height: 1.7; color: var(--text); overflow-x: auto; }
+
+.privacyGrid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+
+.finalCta { margin-top: 80px; text-align: center; padding: 48px 24px; border-radius: 24px; border: 1px solid var(--border-strong); background: radial-gradient(600px 240px at 50% 0%, rgba(21, 62, 47, 0.7), var(--surface)); }
