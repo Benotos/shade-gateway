@@ -72,7 +72,7 @@ export function providerBaseUrl() {
 }
 
 export function isDatabaseConfigured() {
-  return Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
+  return Boolean(process.env.TURSO_DATABASE_URL);
 }
 
 export function isDepositConfigured() {

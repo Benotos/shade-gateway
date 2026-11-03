@@ -16,8 +16,7 @@ git push
 
 ## 2. Set up services (free tiers)
 
-1. **Supabase** (supabase.com): New project → SQL Editor → New query → paste all of `supabase/schema.sql` → Run.
-   Then Project Settings → API: copy **Project URL** and the **service_role** key.
+1. **Turso** (turso.tech): sign up → **Create Database** (pick a region near your users, e.g. Europe) → open the database → **Connect** (or Generate Token). Copy the **Database URL** (starts with `libsql://`) and the **auth token**. The tables are created automatically on the first request, so there's no SQL to run.
 2. **OpenRouter** (openrouter.ai): create an API key, add a few dollars of credit, and set a credit limit on the key.
 3. **Treasury wallet**: a fresh Solana wallet used only for deposits. You only need its public address.
 4. **RPC**: free Helius (helius.dev) or QuickNode mainnet URL. The public RPC rate limits.
@@ -31,8 +30,8 @@ Vercel → shade-gateway → Settings → Environment Variables. Add each line f
 | `OPENAI_BASE_URL` | `https://openrouter.ai/api/v1` |
 | `OPENAI_API_KEY` | your OpenRouter key |
 | `SHADE_MODELS` | copy from `.env.example` (replace any old value) |
-| `SUPABASE_URL` | Supabase Project URL |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service_role key |
+| `TURSO_DATABASE_URL` | Turso Database URL (`libsql://...`) |
+| `TURSO_AUTH_TOKEN` | Turso auth token |
 | `SHADE_IP_SALT` | any long random text |
 | `SOLANA_TREASURY_ADDRESS` | treasury wallet address |
 | `NEXT_PUBLIC_SOLANA_DEPOSIT_ADDRESS` | same address |
@@ -57,7 +56,7 @@ vercel --prod
 ## How it works
 
 - **Credits**: 1,000 credits = $1. Each call costs the provider's real price × `SHADE_MARKUP` (1.5 = 50% margin). The cost is held before the call and the unused part refunded after. Failed calls are free. Balances can't go negative.
-- **Deposits**: each purchase gets a unique exact SOL amount and a Solana Pay reference, locked for 30 minutes. QR payments are found by reference, manual sends by exact amount. One transaction can only credit one purchase. If someone sends a wrong amount, find their deposit in Supabase (`shade_deposits`) and credit it by hand.
+- **Deposits**: each purchase gets a unique exact SOL amount and a Solana Pay reference, locked for 30 minutes. QR payments are found by reference, manual sends by exact amount. One transaction can only credit one purchase. If someone sends a wrong amount, find their deposit in the Turso dashboard (`shade_deposits` table) and credit it by hand.
 - **Privacy**: prompts and answers are never stored. Paid models only go to providers that don't store or train on prompts. The free model may log prompts, and the site says so.
 
 ## Not built yet

@@ -25,5 +25,5 @@ cp .env.example .env.local   # then fill it in
 npm run dev
 ```
 
-Full setup (Supabase, OpenRouter, treasury wallet, Vercel variables) is in **SETUP-BILLING.md**.
+Full setup (Turso, OpenRouter, treasury wallet, Vercel variables) is in **SETUP-BILLING.md**.
 Never commit `.env.local`.
