@@ -14,7 +14,7 @@ export async function GET() {
     network: process.env.NEXT_PUBLIC_SOLANA_NETWORK || 'mainnet-beta',
     freeDailyLimit: freeDailyLimit(),
     models: models.map((m) => ({
-      id: m.id, name: m.name, description: m.description, tag: m.tag, free: m.free,
+      id: m.id, name: m.name, vendor: m.vendor, description: m.description, tag: m.tag, free: m.free,
       inputCreditsPerM: m.free ? 0 : creditsPerM(m.inputPerM),
       outputCreditsPerM: m.free ? 0 : creditsPerM(m.outputPerM),
     })),

@@ -29,7 +29,6 @@ Vercel → shade-gateway → Settings → Environment Variables. Add each line f
 |---|---|
 | `OPENAI_BASE_URL` | `https://openrouter.ai/api/v1` |
 | `OPENAI_API_KEY` | your OpenRouter key |
-| `SHADE_MODELS` | copy from `.env.example` (replace any old value) |
 | `TURSO_DATABASE_URL` | Turso Database URL (`libsql://...`) |
 | `TURSO_AUTH_TOKEN` | Turso auth token |
 | `SHADE_IP_SALT` | any long random text |
@@ -38,7 +37,7 @@ Vercel → shade-gateway → Settings → Environment Variables. Add each line f
 | `SOLANA_RPC_URL` | Helius/QuickNode URL |
 | `NEXT_PUBLIC_SUPPORT_URL` | your Telegram/X link, e.g. `https://t.me/yourname` |
 
-Delete the old `SHADE_API_KEYS` variable; keys are now created on the purchase page.
+Delete the old `SHADE_API_KEYS` and `SHADE_MODELS` variables; keys are created on the purchase page and the model lineup is built in.
 
 ## 4. Deploy
 
@@ -50,7 +49,7 @@ vercel --prod
 
 1. Open `/chat`, send a message on **Shade Free**. You should get an answer.
 2. Open `/purchase`, create a key, save it, pick **Starter**, scan the QR with your wallet and pay. Credits should appear within a minute.
-3. Back on `/chat`, pick **Shade Flash** and send a message. The balance should drop slightly.
+3. Back on `/chat`, pick **GPT-4o mini** and send a message. The balance should drop slightly.
 4. The home page counters should now show real numbers.
 
 ## How it works

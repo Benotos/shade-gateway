@@ -1,14 +1,17 @@
 import 'server-only';
 import { getModels, markup, providerBaseUrl, type ShadeModel } from './config';
 
-// Live provider prices (OpenRouter publishes them at /api/v1/models). Cached for an hour.
-// Falls back to the static prices in lib/config.ts when the provider isn't OpenRouter or is unreachable.
+// Live model list and prices from OpenRouter (/api/v1/models), cached for an hour.
+// Used to (1) show current prices and (2) hide models the provider no longer serves.
+// If the list can't be loaded, every configured model is shown with its fallback price.
 
-let cache: { at: number; prices: Map<string, { inputPerM: number; outputPerM: number }> } | null = null;
+type Live = { at: number; ok: boolean; prices: Map<string, { inputPerM: number; outputPerM: number }> };
+let cache: Live | null = null;
 
-async function livePrices() {
-  if (cache && Date.now() - cache.at < 3_600_000) return cache.prices;
+async function live(): Promise<Live> {
+  if (cache && Date.now() - cache.at < 3_600_000) return cache;
   const prices = new Map<string, { inputPerM: number; outputPerM: number }>();
+  let ok = false;
   if (providerBaseUrl().includes('openrouter.ai')) {
     try {
       const r = await fetch('https://openrouter.ai/api/v1/models', { next: { revalidate: 3600 } });
@@ -17,18 +20,22 @@ async function livePrices() {
         const p = Number(m.pricing?.prompt), c = Number(m.pricing?.completion);
         if (Number.isFinite(p) && Number.isFinite(c)) prices.set(m.id, { inputPerM: p * 1e6, outputPerM: c * 1e6 });
       }
-    } catch { /* fall back to static prices */ }
+      ok = prices.size > 50;
+    } catch { /* fall back to configured prices */ }
   }
-  cache = { at: Date.now(), prices };
-  return prices;
+  cache = { at: Date.now(), ok, prices };
+  return cache;
 }
 
-/** Models with current provider prices filled in. */
+/** Available models with current provider prices filled in. */
 export async function pricedModels(): Promise<ShadeModel[]> {
-  const prices = await livePrices();
-  return getModels().map((m) => {
-    const live = prices.get(m.providerModel);
-    return live && !m.free ? { ...m, inputPerM: live.inputPerM, outputPerM: live.outputPerM } : m;
+  const { ok, prices } = await live();
+  return getModels().flatMap((m) => {
+    const p = prices.get(m.providerModel);
+    // "~vendor/x-latest" aliases and free models aren't always in the list, so they are never hidden.
+    const alwaysShow = m.free || m.providerModel.startsWith('~');
+    if (ok && !p && !alwaysShow) return [];
+    return [p && !m.free ? { ...m, inputPerM: p.inputPerM, outputPerM: p.outputPerM } : m];
   });
 }
 
@@ -37,7 +44,7 @@ export async function pricedModels(): Promise<ShadeModel[]> {
  * tier falls back to one of these when the configured one is gone.
  */
 export async function freeModelIds(exclude: string[] = []): Promise<string[]> {
-  const prices = await livePrices();
+  const { prices } = await live();
   const preferred = ['meta-llama/llama-3.3-70b', 'deepseek/deepseek', 'google/gemini', 'google/gemma-3', 'mistralai/mistral-small', 'qwen/qwen3', 'meta-llama/'];
   const free = [...prices.keys()].filter((id) => id.endsWith(':free') && !exclude.includes(id));
   const rank = (id: string) => { const i = preferred.findIndex((p) => id.startsWith(p)); return i < 0 ? preferred.length : i; };

@@ -57,17 +57,20 @@ const coreFrag = /* glsl */ `
   varying vec3 vN;
   varying vec3 vV;
   varying vec3 vP;
-  // cheap swirl so the core reads as liquid glass, not a flat ball
-  float bands(vec3 p) {
-    float a = atan(p.z, p.x) + uTime * 0.25 + p.y * 2.2;
-    return 0.5 + 0.5 * sin(a * 3.0 + sin(p.y * 4.0 - uTime * 0.6) * 1.5);
-  }
+  // Glossy black glass: dark body, soft green depth, a moving highlight and a mint rim.
+  float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
   void main() {
-    float f = pow(1.0 - max(dot(vN, vV), 0.0), 4.0);
-    float b = bands(normalize(vP));
-    vec3 col = mix(vec3(0.0), uDeep * 0.9, b * 0.55);
-    col += uRim * f * 0.75;
-    col += uRim * pow(f, 10.0) * 0.9;
+    vec3 n = normalize(vN);
+    float facing = max(dot(n, normalize(vV)), 0.0);
+    float rim = pow(1.0 - facing, 3.5);
+    vec3 p = normalize(vP);
+    float swirl = 0.5 + 0.5 * sin(atan(p.z, p.x) * 2.0 + p.y * 3.0 + uTime * 0.35);
+    vec3 col = uDeep * (0.18 + 0.22 * (1.0 - facing) + 0.12 * swirl * facing);
+    vec3 L = normalize(vec3(-0.55 + 0.15 * sin(uTime * 0.3), 0.7, 0.6));
+    vec3 H = normalize(L + normalize(vV));
+    col += vec3(0.85, 1.0, 0.92) * pow(max(dot(n, H), 0.0), 90.0) * 0.55;
+    col += uRim * rim * 0.9;
+    col += (hash(gl_FragCoord.xy + uTime) - 0.5) / 255.0 * 2.0; // dither: no banding on dark gradients
     gl_FragColor = vec4(col, 1.0);
   }
 `;
@@ -101,7 +104,8 @@ export default function ShadeCore({ className }: { className?: string }) {
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const coarse = window.matchMedia('(pointer: coarse)').matches;
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+    // Render above screen resolution on desktop (supersampling) so edges stay crisp; cap on phones for battery.
+    const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1) * (coarse ? 1 : 1.5), coarse ? 2 : 2.5);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
     renderer.setPixelRatio(dpr);
@@ -123,7 +127,7 @@ export default function ShadeCore({ className }: { className?: string }) {
       vertexShader: coreVert, fragmentShader: coreFrag,
       uniforms: { uTime: { value: 0 }, uRim: { value: MINT.clone() }, uDeep: { value: DEEP.clone() } },
     });
-    const core = new THREE.Mesh(new THREE.SphereGeometry(1, 96, 96), coreMat);
+    const core = new THREE.Mesh(new THREE.SphereGeometry(1, 128, 128), coreMat);
     world.add(core);
 
     // Rings: the two crossed ellipses of the logo, given depth
@@ -137,12 +141,12 @@ export default function ShadeCore({ className }: { className?: string }) {
       world.add(pivot);
 
       const line = new THREE.Mesh(
-        new THREE.TorusGeometry(ringR, 0.012, 12, 320),
+        new THREE.TorusGeometry(ringR, 0.017, 16, 512),
         new THREE.MeshBasicMaterial({ color: MINT, transparent: true, opacity: 0.7 }),
       );
       pivot.add(line);
       const halo = new THREE.Mesh(
-        new THREE.TorusGeometry(ringR, 0.06, 12, 320),
+        new THREE.TorusGeometry(ringR, 0.06, 16, 512),
         new THREE.MeshBasicMaterial({ color: MINT, transparent: true, opacity: 0.035, blending: THREE.AdditiveBlending, depthWrite: false }),
       );
       pivot.add(halo);
@@ -222,7 +226,9 @@ export default function ShadeCore({ className }: { className?: string }) {
     scene.add(dust);
 
     // Bloom
-    const composer = new EffectComposer(renderer);
+    // Post-processing normally switches anti-aliasing off; a multisampled target keeps it on.
+    const msaaTarget = new THREE.WebGLRenderTarget(1, 1, { samples: 4, type: THREE.HalfFloatType });
+    const composer = new EffectComposer(renderer, msaaTarget);
     composer.addPass(new RenderPass(scene, camera));
     const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.55, 0.4, 0.42);
     composer.addPass(bloom);

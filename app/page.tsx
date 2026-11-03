@@ -166,7 +166,7 @@ client = OpenAI(
 )
 
 r = client.chat.completions.create(
-    model="fast",
+    model="gpt-4o-mini",
     messages=[{"role": "user", "content": "Summarise today's SOL news"}],
 )
 
