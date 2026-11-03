@@ -31,7 +31,7 @@ function validate(body: ChatInput) {
   });
   if (chars > 200_000) throw new GatewayError(413, 'Prompt too long (max 200,000 characters).', 'prompt_too_long');
   const cap = maxOutputTokens();
-  const maxTokens = Math.min(cap, Math.max(1, Math.floor(Number(body.max_tokens) || Math.min(1024, cap))));
+  const maxTokens = Math.min(cap, Math.max(1, Math.floor(Number(body.max_tokens) || Math.min(2048, cap))));
   const t = Number(body.temperature);
   const temperature = Number.isFinite(t) ? Math.min(2, Math.max(0, t)) : undefined;
   return { messages, maxTokens, temperature, chars };
@@ -140,7 +140,7 @@ export async function runChat(req: Request, key: string | null, body: ChatInput,
     if (!(await rateHit(`${visitor}:free:day`, 86_400, freeDailyLimit()))) {
       throw new GatewayError(429, `Free tier limit reached (${freeDailyLimit()} per day). Buy credits to keep going.`, 'free_limit_reached');
     }
-    const { r, used } = await callFree(model, messages, Math.min(maxTokens, 1024), temperature);
+    const { r, used } = await callFree(model, messages, Math.min(maxTokens, 2048), temperature);
     const pt = r.usage?.prompt_tokens ?? 0, ct = r.usage?.completion_tokens ?? 0;
     await recordFree(model.id, used, pt, ct);
     return shape(r, model, pt, ct, 0, null, true);

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import c from './chat.module.css';
 import { emitBalance, getKey } from '@/components/shadeKey';
+import Markdown from '@/components/Markdown';
 
 type Model = { id: string; name: string; description: string; tag: string; free: boolean; inputCreditsPerM: number; outputCreditsPerM: number };
 type Msg = { role: 'user' | 'assistant'; content: string; meta?: string };
@@ -104,7 +105,7 @@ export default function ChatClient() {
           )}
           {messages.map((m, i) => (
             <div key={i} className={m.role === 'user' ? c.user : c.assistant}>
-              <div className={c.bubble}>{m.content}</div>
+              <div className={`${c.bubble} ${m.role === 'assistant' ? c.md : ''}`}>{m.role === 'assistant' ? <Markdown text={m.content} /> : m.content}</div>
               {m.meta && <div className={c.meta}>{m.meta}</div>}
             </div>
           ))}

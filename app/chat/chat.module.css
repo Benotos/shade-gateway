@@ -32,3 +32,20 @@
 .input { flex: 1; resize: none; background: transparent; border: 0; color: var(--text); font-size: 15px; line-height: 1.5; padding: 8px 6px; max-height: 200px; field-sizing: content; }
 .input:focus { outline: none; }
 .composer button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Formatted assistant answers */
+.md { white-space: normal; }
+.md > :first-child { margin-top: 0; }
+.md > :last-child { margin-bottom: 0; }
+.md p { margin: 0 0 10px; }
+.md h3, .md h4, .md h5, .md h6 { margin: 16px 0 8px; font-size: 15.5px; font-weight: 650; color: var(--text); }
+.md h3 { font-size: 17px; }
+.md ul, .md ol { margin: 0 0 10px; padding-left: 22px; }
+.md li { margin: 4px 0; }
+.md strong { color: var(--text); font-weight: 650; }
+.md a { color: var(--accent); }
+.md code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 1px 5px; }
+.md pre { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; overflow-x: auto; margin: 0 0 10px; }
+.md pre code { background: none; border: 0; padding: 0; font-size: 13px; line-height: 1.55; white-space: pre; }
+.md blockquote { margin: 0 0 10px; padding-left: 12px; border-left: 3px solid var(--border-strong); color: var(--muted); }
+.md hr { border: 0; border-top: 1px solid var(--border); margin: 14px 0; }
