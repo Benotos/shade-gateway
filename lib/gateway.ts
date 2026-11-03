@@ -79,8 +79,17 @@ async function callProvider(model: ShadeModel, messages: Msg[], maxTokens: numbe
     throw new GatewayError(504, 'The model took too long to respond. You were not charged.', 'provider_timeout');
   }
   if (!res.ok) {
-    const status = res.status === 429 ? 503 : 502;
-    throw new GatewayError(status, res.status === 429 ? 'Model is busy right now, try again shortly. You were not charged.' : 'The model provider returned an error. You were not charged.', 'provider_error');
+    // Log the provider's reason (never the prompt) so it shows in Vercel -> Logs.
+    const detail = (await res.text().catch(() => '')).slice(0, 400);
+    console.error(`[shade] provider ${res.status} for ${model.providerModel}: ${detail}`);
+    const reason =
+      res.status === 401 ? 'provider key is invalid' :
+      res.status === 402 ? 'provider account is out of credit' :
+      res.status === 404 && /data policy|privacy/i.test(detail) ? 'provider privacy settings block this model' :
+      res.status === 404 ? 'model not found at provider' :
+      res.status === 429 ? 'model is busy or rate limited' :
+      `provider error ${res.status}`;
+    throw new GatewayError(res.status === 429 ? 503 : 502, `The model couldn't answer (${reason}). You were not charged.`, `provider_${res.status}`);
   }
   const json = await res.json() as ProviderResult;
   if (!json?.choices?.length) throw new GatewayError(502, 'Empty response from model. You were not charged.', 'provider_error');
