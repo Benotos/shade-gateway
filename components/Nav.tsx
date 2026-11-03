@@ -16,6 +16,13 @@ export default function Nav() {
   const path = usePathname();
   const [open, setOpen] = useState(false);
   const [balance, setBalance] = useState<number | null>(null);
+  const [copied, setCopied] = useState(false);
+  const tokenCa = process.env.NEXT_PUBLIC_TOKEN_CA;
+  const xUrl = process.env.NEXT_PUBLIC_X_URL;
+  const copyCa = async () => {
+    if (!tokenCa) return;
+    try { await navigator.clipboard.writeText(tokenCa); setCopied(true); window.setTimeout(() => setCopied(false), 1800); } catch { setCopied(false); }
+  };
 
   useEffect(() => setOpen(false), [path]);
   useEffect(() => {
@@ -38,6 +45,9 @@ export default function Nav() {
         </div>
         <div className="navRight">
           {balance !== null && <span className="navBal"><strong>{balance.toLocaleString('en-US', { maximumFractionDigits: 1 })}</strong> credits</span>}
+          <a href="https://github.com/Benotos/shade-gateway" className="cta ctaGhost navSocial" target="_blank" rel="noreferrer">GitHub</a>
+          {xUrl && <a href={xUrl} className="cta ctaGhost navSocial" target="_blank" rel="noreferrer">X</a>}
+          {tokenCa && <button type="button" className="cta ctaGhost navSocial" onClick={copyCa} aria-label="Copy SHADE contract address">{copied ? 'Copied' : 'CA'}</button>}
           <Link href="/purchase" className="cta ctaPrimary">Buy credits</Link>
           <button className="menuBtn" aria-label="Menu" aria-expanded={open} onClick={() => setOpen((v) => !v)}>☰</button>
         </div>
