@@ -5,6 +5,7 @@ import LiveStats from '@/components/LiveStats';
 import HeroScene from '@/components/HeroScene';
 import Tilt from '@/components/Tilt';
 import Reveal from '@/components/Reveal';
+import CABox from '@/components/CABox';
 import { creditsPerM, pricedModels } from '@/lib/catalog';
 import { freeDailyLimit, getPackages, packageCreditUnits, unitsToCredits } from '@/lib/config';
 
@@ -47,6 +48,9 @@ export default async function Home() {
         </section>
 
         <LiveStats />
+
+        {/* Official token contract */}
+        <Reveal><CABox /></Reveal>
 
         {/* Value props */}
         <Reveal><section className={s.section}>
